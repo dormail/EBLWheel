@@ -1,7 +1,16 @@
 import gdsfactory as gf
 import pandas as pd
+import sys 
 
-input = pd.read_csv('wheel_example.csv', comment='#')
+
+if len(sys.argv) > 1:
+    input_file = str(sys.argv[1])
+    print(f'Reading ' + input_file)
+else:
+    input_file = 'wheel_example.csv'
+    print(f'Reading ' + input_file)
+
+input = pd.read_csv(input_file, comment='#')
 
 x = input['x']
 y = input['y']
@@ -49,40 +58,11 @@ def wheel(chip: gf.Component,
 
 
 
-# Add a rectangle
-# r = gf.components.rectangle(size=(10, 10), layer=(1, 0))
-# rect = c.add_ref(r)
-
-# # 
-# wheel(c, (1e-2,1e-2), 1e-6, 100e-6,)
 for posi, li, di in zip(positions, input['linewidth'], input['diameter']):
     wheel(c, posi, li, di)
 
-# wheel(c, (1,1), 50e-3, 2)
-# wheel(c, (-1,-1), 80e-3, 2)
 
-# circ = gf.components.circle(radius=1e-2 / 2, angle_resolution=2.5, layer=(1,0))
-# circ = c << circ
-
-# wheel(c, (-1e-2,-1e-2), 1e-6, 1e-5)
-# Add text elements
-# t1 = gf.components.text("Hello", size=10, layer=(2, 0))
-# t2 = gf.components.text("world", size=10, layer=(2, 0))
-
-# text1 = c.add_ref(t1)
-# text2 = c.add_ref(t2)
-
-# # Position elements
-# text1.xmin = rect.xmax + 5
-# text2.xmin = text1.xmax + 2
-# text2.rotate(30)
-
-# Show the result
-# c.show()
 c.flatten()
 
 
 c.write_gds(f"output.gds")
-
-
-
